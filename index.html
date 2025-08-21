@@ -218,7 +218,7 @@
             To this end, we change the optimizer to LM that runs in conjunction with the 3DGS differentiable rasterizer.
             For efficient GPU parallelization, we propose a caching data structure for intermediate gradients that allows us to efficiently calculate Jacobian-vector products in custom CUDA kernels.
             In every LM iteration, we calculate update directions from multiple image subsets using these kernels and combine them in a weighted mean.
-            Overall, our method is 30% faster than the original 3DGS while obtaining the same reconstruction quality.
+            Overall, our method is 20% faster than the original 3DGS while obtaining the same reconstruction quality.
             Our optimization is also agnostic to other methods that accelerate 3DGS, thus enabling even faster speedups compared to vanilla 3DGS.
           </p>
         </div>
@@ -266,7 +266,7 @@
             </div>
             <div class="content has-text-justified">
             <p>
-                Our proposed caching data structure for intermediate gradients allows us to perform the required Jacobien-vector products fast and efficiently in a data-parallel fashion.
+                Our proposed caching data structure for intermediate gradients allows us to perform the required Jacobian-vector products fast and efficiently in a data-parallel fashion.
                 Before PCG starts, we create the gradient cache following the per-pixel parallelization of 3DGS.
                 Afterwards, we sort the cache by Gaussians to ensure coalesced read accesses.
                 The cache decouples splats along rays, which allows us to parallelize per-pixel-per-splat during PCG.
@@ -342,11 +342,11 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@preprint{hoellein_2024_3dgslm,
+    <pre><code>@InProceedings{hoellein_2025_3dgslm,
     title={3DGS-LM: Faster Gaussian-Splatting Optimization with Levenberg-Marquardt},
     author={H{\"o}llein, Lukas and Bo\v{z}i\v{c}, Alja\v{z} and Zollh{\"o}fer, Michael and Nie{\ss}ner, Matthias},
-    booktitle={arXiV:2409.12892},
-    year={2024}
+    booktitle={Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+    year={2025}
 }</code></pre>
   </div>
 </section>
