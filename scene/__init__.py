@@ -30,7 +30,7 @@ class Scene:
         self.loaded_iter = None
         self.gaussians = gaussians
 
-        if load_iteration:
+        if load_iteration is not None:
             if load_iteration == -1:
                 self.loaded_iter = searchForMaxIteration(os.path.join(self.model_path, "point_cloud"))
             else:
@@ -50,7 +50,7 @@ class Scene:
             else:
                 assert False, f"Could not recognize scene type at {args.source_path}!"
 
-            if not self.loaded_iter:
+            if self.loaded_iter is not None:
                 with open(scene_info.ply_path, 'rb') as src_file, open(os.path.join(self.model_path, "input.ply") , 'wb') as dest_file:
                     dest_file.write(src_file.read())
                 json_cams = []
@@ -89,7 +89,7 @@ class Scene:
             self.spherical_cameras = loaded_cams["spherical"]
             self.cameras_extent = loaded_cams["extent"]
 
-        if self.loaded_iter:
+        if self.loaded_iter is not None:
             self.gaussians.load_ply(os.path.join(self.model_path,
                                                            "point_cloud",
                                                            "iteration_" + str(self.loaded_iter),

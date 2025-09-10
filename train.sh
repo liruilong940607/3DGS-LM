@@ -1,5 +1,5 @@
 python train.py \
--s /home/ruilongl/workspace/data/mipnerf360/garden/ \
+-s /lustre/fs12/portfolios/nvr/projects/nvr_torontoai_3dscenerecon/users/ruilongl/data/360_v2/garden/ \
 --root_out outputs/garden \
 --exp_name "3dgs_lm_garden" \
 --eval \
@@ -16,5 +16,6 @@ python train.py \
 --trust_region_radius 1e-3 \
 --max_trust_region_radius 1e-2 \
 --iterations 5 \
---test_iterations 5 \
---save_iterations 5
+--test_iterations 0 1 2 3 4 5 \
+--save_iterations 0 1 2 3 4 5 \
+--checkpoint_iterations 0 1 2 3 4 5

@@ -776,6 +776,33 @@ def training(dataset: ModelParams, opt: OptimizationParams, gsgn: GSGNParams, pi
                 total_elapsed_time += toc - tic
                 tic = time.time()
 
+                _iteration = 0 # hacky iteration identifier for the SGD initialization
+                if not quiet:
+                    log_render_stats(
+                        tb_writer=tb_writer,
+                        iteration=_iteration,
+                        testing_iterations=testing_iterations,
+                        scene=scene,
+                        renderFunc=render,
+                        renderArgs=(pipe, background)
+                    )
+
+                if _iteration in checkpoint_iterations:                 
+                    mem = torch.cuda.max_memory_allocated() / 1024 ** 3
+                    stats = {
+                        "mem": mem,
+                        "ellipse_time": total_elapsed_time,
+                        "num_GS": len(gaussians.get_xyz),
+                    }
+                    with open(scene.model_path + "/train_stats_" + str(_iteration) + ".json", "w") as f:
+                        json.dump(stats, f)
+                    print("\n[ITER {}] Saving Gaussians (after SGD)".format(_iteration))
+                    scene.save(_iteration)
+
+                if _iteration in checkpoint_iterations:
+                    print("\n[ITER {}] Saving Checkpoint (after SGD)".format(_iteration))
+                    torch.save((gaussians.capture(), _iteration, None, None), scene.model_path + "/chkpnt" + str(_iteration) + ".pth")
+
             # free SGD specific memory that is no longer used
             if gsgn.num_sgd_iterations_between_gn <= 0 and gsgn.num_sgd_iterations_after_gn <= 0 and len(checkpoint_iterations) == 0:
                 gaussians.remove_sgd_data()
@@ -850,7 +877,7 @@ def training(dataset: ModelParams, opt: OptimizationParams, gsgn: GSGNParams, pi
                 scene.save(iteration)
 
             if iteration in checkpoint_iterations:
-                print("\n[ITER {}] Saving Checkpoint".format(iteration))
+                print("\n[ITER {}] Saving Checkpoint (after LM)".format(iteration))
                 torch.save((gaussians.capture(), iteration, trust_region_radius, radius_decrease_factor), scene.model_path + "/chkpnt" + str(iteration) + ".pth")
 
         tic = time.time()
